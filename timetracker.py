@@ -34,6 +34,10 @@ class TimeManager():
         self.StopButton['state'] = 'disabled'
         self.PauseButton['state'] = 'disabled'
 
+        self.StartButton.config(command = self.begin_task)
+        self.PauseButton.config(command = self.pause_task)
+        self.StopButton.config(command = self.end_task)
+
 
 
     def return_current_time(self):
@@ -65,7 +69,7 @@ class TimeManager():
         self.TaskCategoryBox['state'] = 'readonly'
         self.TaskDescEntry['state'] = 'normal'
         self.PauseButton['state'] = 'disabled'
-        self.NameEntry['state'] = 'normal'
+        self.NameEntry['state'] = 'readonly'
 
         self.task_end_time = dt.datetime.now()
         today = dt.datetime.today()
@@ -161,7 +165,15 @@ class MainUIWindow():
 
     name_label = tk.Label(inputs_frame, text='Name:')
     name_label.grid(row=0, column=0, sticky='e')
-    name_entry = tk.Entry(inputs_frame)
+    name_entry = ttk.Combobox(
+        inputs_frame,
+        values=[
+        'Andrew',
+        'Tate',
+        'Travis'
+        ],
+        state='readonly'
+        )
     name_entry.grid(row=0, column=1, sticky='w')
 
     start = tk.Button(inputs_frame, text='Start Task', width=6)
@@ -181,10 +193,5 @@ class MainUIWindow():
         stop, 
         window
         )
-
-
-    start.config(command = my_time_manager.begin_task)
-    pause.config(command = my_time_manager.pause_task)
-    stop.config(command = my_time_manager.end_task)
 
 MainUIWindow.window.mainloop()
