@@ -62,6 +62,10 @@ class TimeManager():
 
     def end_task(self):
 
+        if (self.is_paused):
+            self.Calculate_Pause_Time()
+            self.is_paused = False
+
         #configure widgets for state (ended task) TODO: Split state configurations into their own method
         self.StopButton['state'] = 'disabled'
         self.StartButton['state'] = 'active'
@@ -94,9 +98,7 @@ class TimeManager():
             self.PauseButton.config(text='Pause Task')
             self.ClockLabel.config(fg = 'green')
         
-            self.end_pause_time = dt.datetime.now()
-            self.end_pause_time = self.end_pause_time.replace(microsecond=0)
-            self.total_time_paused += self.end_pause_time - self.start_pause_time
+            self.Calculate_Pause_Time()
 
             self.is_paused = False
 
@@ -110,15 +112,20 @@ class TimeManager():
             self.is_paused = True
 
     def Find_File_Path(self):
-        if(os.path.exists('/Volumes/Watts Atelier’s Public Folder/TaskInfo/tasks.csv')):
-            self.csv_path = '/Volumes/Watts Atelier’s Public Folder/TaskInfo/tasks.csv'
+        if(os.path.exists('./taskstesting.csv')):
+            self.csv_path = './taskstesting.csv'
         elif(os.path.exists('/Users/wattsatelier/Public/TaskInfo/tasks.csv')):
             self.csv_path ='/Users/wattsatelier/Public/TaskInfo/tasks.csv'
-        elif(os.path.exists('./taskstesting.csv')):
-            self.csv_path = './taskstesting.csv'
+        elif(os.path.exists('/Volumes/Watts Atelier’s Public Folder/TaskInfo/tasks.csv')):
+            self.csv_path = '/Volumes/Watts Atelier’s Public Folder/TaskInfo/tasks.csv'
         else:
             print("Couldn't find the tasks file.")
             self.Window.config(bg='red')
+
+    def Calculate_Pause_Time(self):
+        self.end_pause_time = dt.datetime.now()
+        self.end_pause_time = self.end_pause_time.replace(microsecond=0)
+        self.total_time_paused += self.end_pause_time - self.start_pause_time
 
 
 class MainUIWindow():
@@ -158,7 +165,8 @@ class MainUIWindow():
             'Research',
             'Admin',
             'Writing',
-            'Programming'
+            'Programming',
+            'Filming'
         ],
         state='readonly')
     task_category_combobox.grid(row=2, column=1)
