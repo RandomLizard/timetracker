@@ -6,12 +6,12 @@ import csv
 
 class TimeManager():
 
-    task_start_time = dt.time(0,0,0,0)
-    task_end_time = dt.time(0,0,0,0)
+    task_start_time = dt.datetime.now()
+    task_end_time = dt.datetime.now()
 
-    start_pause_time = dt.time(0,0,0,0)
-    end_pause_time = dt.time(0,0,0,0)
-    total_time_paused = dt.time(0,0,0,0)
+    start_pause_time = dt.datetime.now()
+    end_pause_time = dt.datetime.now()
+    total_time_paused = dt.timedelta(seconds=0)
     is_paused = False
 
     csv_path = ''
@@ -41,7 +41,7 @@ class TimeManager():
         self.ClockLabel.config(text = now.strftime('%I:%M:%S %p'))
         self.ClockLabel.after(1000, self.return_current_time)
 
-    def begin_task(self):
+    def begin_task(self, event):
 
         #configure widgets for state (started task)
         self.StartButton['state'] = 'disabled'
@@ -56,7 +56,7 @@ class TimeManager():
         self.task_start_time = dt.datetime.now()
 
 
-    def end_task(self):
+    def end_task(self, event):
 
         #configure widgets for state (ended task) TODO: Split state configurations into their own method
         self.StopButton['state'] = 'disabled'
@@ -82,8 +82,9 @@ class TimeManager():
             writer = csv.writer(csvfile, delimiter=',')
             writer.writerow(List)
             csvfile.close()
+            print("Wrote and closed file.")
 
-    def pause_task(self):
+    def pause_task(self, event):
 
         if (self.is_paused):
             self.PauseButton.config(text='Pause Task', bg='blue')
@@ -93,16 +94,16 @@ class TimeManager():
             self.end_pause_time = self.end_pause_time.replace(microsecond=0)
             self.total_time_paused += self.end_pause_time - self.start_pause_time
 
-            is_paused = False
+            self.is_paused = False
 
-        elif not(is_paused):
+        elif not(self.is_paused):
             pause.config(text='Resume Task', bg='yellow')
             current_time.config(fg = 'yellow')
 
             self.start_pause_time = dt.datetime.now()
             self.start_pause_time = self.start_pause_time.replace(microsecond=0)
 
-            is_paused = True
+            self.is_paused = True
 
     def Find_File_Path(self):
         if(os.path.exists('/Volumes/Watts Atelier’s Public Folder/TaskInfo/tasks.csv')):
@@ -180,8 +181,8 @@ my_time_manager = TimeManager(
     window
     )
 
-start.bind(my_time_manager.begin_task())
-stop.bind(my_time_manager.end_task())
-pause.bind(my_time_manager.pause_task())
+start.bind("<Button-1>", my_time_manager.begin_task)
+pause.bind("<Button-1>",my_time_manager.pause_task)
+stop.bind("<Button-1>",my_time_manager.end_task)
 
 window.mainloop()
