@@ -49,8 +49,8 @@ class TimeManager():
         self.PauseButton['state'] = 'active'
         self.TaskCategoryBox['state'] = 'disabled'
         self.TaskDescEntry['state'] = 'disabled'
-        name_entry['state'] = 'disabled'
-        current_time.config(fg = 'green')
+        self.NameEntry['state'] = 'disabled'
+        self.ClockLabel.config(fg = 'green')
 
         #sets the start time to when the user clicked the start task button
         self.task_start_time = dt.datetime.now()
@@ -97,8 +97,8 @@ class TimeManager():
             self.is_paused = False
 
         elif not(self.is_paused):
-            pause.config(text='Resume Task', bg='yellow')
-            current_time.config(fg = 'yellow')
+            self.PauseButton.config(text='Resume Task', bg='yellow')
+            self.ClockLabel.config(fg = 'yellow')
 
             self.start_pause_time = dt.datetime.now()
             self.start_pause_time = self.start_pause_time.replace(microsecond=0)
@@ -117,74 +117,74 @@ class TimeManager():
             self.Window.config(bg='red')
 
 
+class MainUIWindow():
+    window = tk.Tk()
 
-window = tk.Tk()
+    window.title("Time Tracker")
 
-window.title("Time Tracker")
+    timer_frame = tk.Frame(window, relief=tk.RAISED, borderwidth=1)
+    timer_frame.grid(row=1, column=1, pady=5, sticky='ew')
+    inputs_frame = tk.Frame(window)
+    inputs_frame.grid(row=2, column=1,padx=10, pady=5, sticky='w')
 
-timer_frame = tk.Frame(window, relief=tk.RAISED, borderwidth=1)
-timer_frame.grid(row=1, column=1, pady=5, sticky='ew')
-inputs_frame = tk.Frame(window)
-inputs_frame.grid(row=2, column=1,padx=10, pady=5, sticky='w')
+    window.columnconfigure(1, weight=1, minsize=75)
+    inputs_frame.columnconfigure(0, weight=1)
+    inputs_frame.columnconfigure(1, weight=1)
 
-window.columnconfigure(1, weight=1, minsize=75)
-inputs_frame.columnconfigure(0, weight=1)
-inputs_frame.columnconfigure(1, weight=1)
+    window.minsize(width=250, height=70)
+    current_time_label = tk.Label(timer_frame, text='Current Time:', fg='white', font=('calibri', 20, 'bold'))
+    current_time_label.grid(row=0, column=1, sticky='w')
 
-window.minsize(width=250, height=70)
-current_time_label = tk.Label(timer_frame, text='Current Time:', fg='white', font=('calibri', 20, 'bold'))
-current_time_label.grid(row=0, column=1, sticky='w')
+    current_time = tk.Label(timer_frame, text='', fg="red", font=('calibri', 40, 'bold'))
+    current_time.grid(row=1, column=1, pady=5, sticky = 'w')
 
-current_time = tk.Label(timer_frame, text='', fg="red", font=('calibri', 40, 'bold'))
-current_time.grid(row=1, column=1, pady=5, sticky = 'w')
+    task_description = tk.Label(inputs_frame, text='Task Description:', fg='white')
+    task_description.grid(row=1, column=0)
+    task_description_entry = tk.Entry(inputs_frame)
+    task_description_entry.grid(row=1, column=1,sticky='we')
+    task_category = tk.Label(inputs_frame, text='Task Category:', fg='white')
+    task_category.grid(row=2, column=0, sticky='w')
+    task_category_combobox = ttk.Combobox(
+        inputs_frame,
+        values=[
+            'Emails',
+            'Meetings',
+            'Editing',
+            'Social Media',
+            'Research',
+            'Admin',
+            'Writing',
+            'Programming'
+        ],
+        state='readonly')
+    task_category_combobox.grid(row=2, column=1)
 
-task_description = tk.Label(inputs_frame, text='Task Description:', fg='white')
-task_description.grid(row=1, column=0)
-task_description_entry = tk.Entry(inputs_frame)
-task_description_entry.grid(row=1, column=1,sticky='we')
-task_category = tk.Label(inputs_frame, text='Task Category:', fg='white')
-task_category.grid(row=2, column=0, sticky='w')
-task_category_combobox = ttk.Combobox(
-    inputs_frame,
-    values=[
-        'Emails',
-        'Meetings',
-        'Editing',
-        'Social Media',
-        'Research',
-        'Admin',
-        'Writing',
-        'Programming'
-    ],
-    state='readonly')
-task_category_combobox.grid(row=2, column=1)
+    name_label = tk.Label(inputs_frame, text='Name:')
+    name_label.grid(row=0, column=0, sticky='e')
+    name_entry = tk.Entry(inputs_frame)
+    name_entry.grid(row=0, column=1, sticky='w')
 
-name_label = tk.Label(inputs_frame, text='Name:')
-name_label.grid(row=0, column=0, sticky='e')
-name_entry = tk.Entry(inputs_frame)
-name_entry.grid(row=0, column=1, sticky='w')
+    start = tk.Button(inputs_frame, text='Start Task', width=6)
+    stop = tk.Button(inputs_frame, text='End task', width=6)
+    pause = tk.Button(inputs_frame, text = 'Pause Task', width=6)
+    start.grid(row=3, column=0, sticky='ew')
+    pause.grid(row=3, column=1, sticky='ew')
+    stop.grid(row=3, column=2, sticky='ew')
 
-start = tk.Button(inputs_frame, text='Start Task', width=6)
-stop = tk.Button(inputs_frame, text='End task', width=6)
-pause = tk.Button(inputs_frame, text = 'Pause Task', width=6)
-start.grid(row=3, column=0, sticky='ew')
-pause.grid(row=3, column=1, sticky='ew')
-stop.grid(row=3, column=2, sticky='ew')
-
-my_time_manager = TimeManager(
-    current_time, 
-    name_entry,
-    task_description_entry, 
-    task_category_combobox, 
-    start, 
-    pause, 
-    stop, 
-    window
-    )
+    my_time_manager = TimeManager(
+        current_time, 
+        name_entry,
+        task_description_entry, 
+        task_category_combobox, 
+        start, 
+        pause, 
+        stop, 
+        window
+        )
 
 
-start.config(command = my_time_manager.begin_task)
-pause.config(command = my_time_manager.pause_task)
-stop.config(command = my_time_manager.end_task)
+    start.config(command = my_time_manager.begin_task)
+    pause.config(command = my_time_manager.pause_task)
+    stop.config(command = my_time_manager.end_task)
 
-window.mainloop()
+MainUIWindow.window.mainloop()
