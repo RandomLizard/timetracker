@@ -144,18 +144,19 @@ task_description_entry = tk.Entry(inputs_frame)
 task_description_entry.grid(row=1, column=1,sticky='we')
 task_category = tk.Label(inputs_frame, text='Task Category:', fg='white')
 task_category.grid(row=2, column=0, sticky='w')
-task_category_combobox = ttk.Combobox(inputs_frame,
-                                      values=[
-                                        'Emails',
-                                        'Meetings',
-                                        'Editing',
-                                        'Social Media',
-                                        'Research',
-                                        'Admin',
-                                        'Writing',
-                                        'Programming'
-                                      ],
-                                      state='readonly')
+task_category_combobox = ttk.Combobox(
+    inputs_frame,
+    values=[
+        'Emails',
+        'Meetings',
+        'Editing',
+        'Social Media',
+        'Research',
+        'Admin',
+        'Writing',
+        'Programming'
+    ],
+    state='readonly')
 task_category_combobox.grid(row=2, column=1)
 
 name_label = tk.Label(inputs_frame, text='Name:')
