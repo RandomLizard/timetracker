@@ -78,7 +78,7 @@ class TimeManager():
         List = [self.NameEntry.get(), today.strftime('%m/%d/%Y'), self.TaskDescEntry.get(), self.TaskCategoryBox.get(), str(time_taken)]
 
         #TODO: make writing to the CSV file it's own method.
-        with open(csv_path, 'a') as csvfile:
+        with open(self.csv_path, 'a') as csvfile:
             writer = csv.writer(csvfile, delimiter=',')
             writer.writerow(List)
             csvfile.close()
@@ -100,7 +100,7 @@ class TimeManager():
             current_time.config(fg = 'yellow')
 
             self.start_pause_time = dt.datetime.now()
-            self.start_pause_time = start_pause_time.replace(microsecond=0)
+            self.start_pause_time = self.start_pause_time.replace(microsecond=0)
 
             is_paused = True
 
