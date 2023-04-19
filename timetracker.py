@@ -9,12 +9,15 @@ class TimeManager():
     task_start_time = dt.time(0,0,0,0)
     task_end_time = dt.time(0,0,0,0)
 
+    start_pause_time = dt.time(0,0,0,0)
+    end_pause_time = dt.time(0,0,0,0)
     total_time_paused = dt.time(0,0,0,0)
+    is_paused = False
 
     csv_path = ''
 
 
-    def __init__(self, ClockLabel, NameEntry, TaskDescEntry, TaskCategoryBox, StartButton, PauseButton, StopButton):
+    def __init__(self, ClockLabel, NameEntry, TaskDescEntry, TaskCategoryBox, StartButton, PauseButton, StopButton, Window):
         #Widgets
         self.ClockLabel = ClockLabel
         self.NameEntry = NameEntry
@@ -23,8 +26,13 @@ class TimeManager():
         self.StartButton = StartButton
         self.PauseButton = PauseButton
         self.StopButton = StopButton
+        self.Window = Window
 
         self.return_current_time()
+        self.Find_File_Path()
+
+        self.StopButton['state'] = 'disabled'
+        self.PauseButton['state'] = 'disabled'
 
 
 
@@ -75,48 +83,39 @@ class TimeManager():
             writer.writerow(List)
             csvfile.close()
 
-    def pause_task():
-        global total_time_paused
-        global is_paused
-        global start_pause_time
+    def pause_task(self):
 
-        if (is_paused):
-            end_pause_time = dt.datetime.now()
-            end_pause_time = end_pause_time.replace(microsecond=0)
-            total_time_paused += end_pause_time - start_pause_time
-            print(str(total_time_paused))
-            pause.config(text='Pause Task', bg='blue')
-            current_time.config(fg = 'green')
+        if (self.is_paused):
+            self.PauseButton.config(text='Pause Task', bg='blue')
+            self.ClockLabel.config(fg = 'green')
+        
+            self.end_pause_time = dt.datetime.now()
+            self.end_pause_time = self.end_pause_time.replace(microsecond=0)
+            self.total_time_paused += self.end_pause_time - self.start_pause_time
+
             is_paused = False
 
         elif not(is_paused):
-            start_pause_time = dt.datetime.now()
-            start_pause_time = start_pause_time.replace(microsecond=0)
             pause.config(text='Resume Task', bg='yellow')
             current_time.config(fg = 'yellow')
+
+            self.start_pause_time = dt.datetime.now()
+            self.start_pause_time = start_pause_time.replace(microsecond=0)
+
             is_paused = True
 
-    def Find_File_Path():
-        global csv_path
+    def Find_File_Path(self):
         if(os.path.exists('/Volumes/Watts Atelier’s Public Folder/TaskInfo/tasks.csv')):
-            csv_path = '/Volumes/Watts Atelier’s Public Folder/TaskInfo/tasks.csv'
+            self.csv_path = '/Volumes/Watts Atelier’s Public Folder/TaskInfo/tasks.csv'
         elif(os.path.exists('/Users/wattsatelier/Public/TaskInfo/tasks.csv')):
-            csv_path ='/Users/wattsatelier/Public/TaskInfo/tasks.csv'
+            self.csv_path ='/Users/wattsatelier/Public/TaskInfo/tasks.csv'
         elif(os.path.exists('./taskstesting.csv')):
-            csv_path = './taskstesting.csv'
+            self.csv_path = './taskstesting.csv'
         else:
             print("Couldn't find the tasks file.")
-            window.config(bg='red')
+            self.Window.config(bg='red')
 
 
-
-
-#Global Variables
-start_time = dt.datetime.now()
-start_pause_time = dt.datetime.now()
-total_time_paused = dt.timedelta(seconds=0)
-is_paused = False
-csv_path = ''
 
 window = tk.Tk()
 
@@ -163,14 +162,26 @@ name_label.grid(row=0, column=0, sticky='e')
 name_entry = tk.Entry(inputs_frame)
 name_entry.grid(row=0, column=1, sticky='w')
 
-start = tk.Button(inputs_frame, text='Start Task', width=6, command=begin_task)
-stop = tk.Button(inputs_frame, text='End task', width=6, command=end_task)
-pause = tk.Button(inputs_frame, text = 'Pause Task', width=6, command=pause_task)
+start = tk.Button(inputs_frame, text='Start Task', width=6)
+stop = tk.Button(inputs_frame, text='End task', width=6)
+pause = tk.Button(inputs_frame, text = 'Pause Task', width=6)
 start.grid(row=3, column=0, sticky='w')
 pause.grid(row=4, column=0, sticky='w')
 stop.grid(row=5, column=0, sticky='w')
-return_current_time()
-Find_File_Path()
-stop['state'] = 'disabled'
-pause['state'] = 'disabled'
+
+my_time_manager = TimeManager(
+    current_time, 
+    name_entry,
+    task_description_entry, 
+    task_category_combobox, 
+    start, 
+    pause, 
+    stop, 
+    window
+    )
+
+start.bind(my_time_manager.begin_task())
+stop.bind(my_time_manager.end_task())
+pause.bind(my_time_manager.pause_task())
+
 window.mainloop()
