@@ -76,6 +76,8 @@ def Find_File_Path():
         csv_path = '/Volumes/Watts Atelier’s Public Folder/TaskInfo/tasks.csv'
     elif(os.path.exists('/Users/wattsatelier/Public/TaskInfo/tasks.csv')):
         csv_path ='/Users/wattsatelier/Public/TaskInfo/tasks.csv'
+    elif(os.path.exists('./taskstesting.csv')):
+        csv_path = './taskstesting.csv'
     else:
         print("Couldn't find the tasks file.")
         window.config(bg='red')
