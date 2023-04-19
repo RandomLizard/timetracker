@@ -41,7 +41,7 @@ class TimeManager():
         self.ClockLabel.config(text = now.strftime('%I:%M:%S %p'))
         self.ClockLabel.after(1000, self.return_current_time)
 
-    def begin_task(self, event):
+    def begin_task(self):
 
         #configure widgets for state (started task)
         self.StartButton['state'] = 'disabled'
@@ -56,7 +56,7 @@ class TimeManager():
         self.task_start_time = dt.datetime.now()
 
 
-    def end_task(self, event):
+    def end_task(self):
 
         #configure widgets for state (ended task) TODO: Split state configurations into their own method
         self.StopButton['state'] = 'disabled'
@@ -84,7 +84,7 @@ class TimeManager():
             csvfile.close()
             print("Wrote and closed file.")
 
-    def pause_task(self, event):
+    def pause_task(self):
 
         if (self.is_paused):
             self.PauseButton.config(text='Pause Task')
@@ -182,8 +182,9 @@ my_time_manager = TimeManager(
     window
     )
 
-start.bind("<Button-1>", my_time_manager.begin_task)
-pause.bind("<Button-1>",my_time_manager.pause_task)
-stop.bind("<Button-1>",my_time_manager.end_task)
+
+start.config(command = my_time_manager.begin_task)
+pause.config(command = my_time_manager.pause_task)
+stop.config(command = my_time_manager.end_task)
 
 window.mainloop()
