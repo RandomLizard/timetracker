@@ -87,7 +87,7 @@ class TimeManager():
     def pause_task(self, event):
 
         if (self.is_paused):
-            self.PauseButton.config(text='Pause Task', bg='blue')
+            self.PauseButton.config(text='Pause Task')
             self.ClockLabel.config(fg = 'green')
         
             self.end_pause_time = dt.datetime.now()
@@ -166,9 +166,9 @@ name_entry.grid(row=0, column=1, sticky='w')
 start = tk.Button(inputs_frame, text='Start Task', width=6)
 stop = tk.Button(inputs_frame, text='End task', width=6)
 pause = tk.Button(inputs_frame, text = 'Pause Task', width=6)
-start.grid(row=3, column=0, sticky='w')
-pause.grid(row=4, column=0, sticky='w')
-stop.grid(row=5, column=0, sticky='w')
+start.grid(row=3, column=0, sticky='ew')
+pause.grid(row=3, column=1, sticky='ew')
+stop.grid(row=3, column=2, sticky='ew')
 
 my_time_manager = TimeManager(
     current_time, 
