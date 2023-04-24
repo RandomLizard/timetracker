@@ -114,10 +114,8 @@ class TimeManager():
     def Find_File_Path(self):
         if(os.path.exists('./taskstesting.csv')):
             self.csv_path = './taskstesting.csv'
-        elif(os.path.exists('/Users/wattsatelier/Public/TaskInfo/tasks.csv')):
-            self.csv_path ='/Users/wattsatelier/Public/TaskInfo/tasks.csv'
-        elif(os.path.exists('/Volumes/Watts Atelier’s Public Folder/TaskInfo/tasks.csv')):
-            self.csv_path = '/Volumes/Watts Atelier’s Public Folder/TaskInfo/tasks.csv'
+        elif(os.path.exists('/Volumes/Watts/TimeTracker/TaskInfo/tasks.csv')):
+            self.csv_path ='/Volumes/Watts/TimeTracker/TaskInfo/tasks.csv'
         else:
             print("Couldn't find the tasks file.")
             self.Window.config(bg='red')
