@@ -6,6 +6,7 @@ import csv
 
 class TimeManager():
 
+    #initializing class-wide variables
     task_start_time = dt.datetime.now()
     task_end_time = dt.datetime.now()
 
