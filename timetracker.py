@@ -200,4 +200,8 @@ class MainUIWindow():
         window
         )
 
-MainUIWindow.window.mainloop()
+def main():
+    MainUIWindow.window.mainloop()
+
+if __name__ == '__main__':
+    main()
