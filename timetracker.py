@@ -34,6 +34,7 @@ class TimeManager():
         self.StopButton['state'] = 'disabled'
         self.PauseButton['state'] = 'disabled'
 
+        #Assign the button widgets to functions
         self.StartButton.config(command = self.begin_task)
         self.PauseButton.config(command = self.pause_task)
         self.StopButton.config(command = self.end_task)
@@ -41,6 +42,7 @@ class TimeManager():
 
 
     def return_current_time(self):
+        #Keeps the big clock on the window updated
         now = dt.datetime.now()
         self.ClockLabel.config(text = now.strftime('%I:%M:%S %p'))
         self.ClockLabel.after(1000, self.return_current_time)
@@ -93,7 +95,8 @@ class TimeManager():
             print("Wrote and closed file.")
 
     def pause_task(self):
-
+        #This function will pause the task if it's currently running, 
+        # and will unpause the task if it's currently paused
         if (self.is_paused):
             self.PauseButton.config(text='Pause Task')
             self.ClockLabel.config(fg = 'green')
@@ -112,6 +115,8 @@ class TimeManager():
             self.is_paused = True
 
     def Find_File_Path(self):
+        #This attempts to find the csv file to record the data to, if it can't, it'll turn the window red.
+        #File paths can be changed to wherever you intend to keep the csv file.
         if(os.path.exists('./taskstesting.csv')):
             self.csv_path = './taskstesting.csv'
         elif(os.path.exists('/Volumes/Watts/TimeTracker/TaskInfo/tasks.csv')):
@@ -121,12 +126,15 @@ class TimeManager():
             self.Window.config(bg='red')
 
     def Calculate_Pause_Time(self):
+        #Writes to the total time paused variable, adding up the time paused
         self.end_pause_time = dt.datetime.now()
         self.end_pause_time = self.end_pause_time.replace(microsecond=0)
         self.total_time_paused += self.end_pause_time - self.start_pause_time
 
 
 class MainUIWindow():
+    #This abomination creates the main window UI
+    #TODO: Make this less awful
     window = tk.Tk()
 
     window.title("Time Tracker")
@@ -156,6 +164,8 @@ class MainUIWindow():
     task_category_combobox = ttk.Combobox(
         inputs_frame,
         values=[
+        #Task categories can be whatever you like
+        #TODO: Make this an init variable
             'Emails',
             'Meetings',
             'Editing',
@@ -174,6 +184,8 @@ class MainUIWindow():
     name_entry = ttk.Combobox(
         inputs_frame,
         values=[
+        #Names can be whatever you like
+        #TODO: make this an init variable
         'Andrew',
         'Tate',
         'Travis'
